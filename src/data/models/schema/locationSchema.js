@@ -11,7 +11,7 @@ const geoSchema = mongoose.Schema({
         type: String,
         default: 'Point'
     },
-    coordinates: [Number]
+    coordinates: [Number],
 }, {
     toObject: {
         transform: removeMongoId
@@ -28,6 +28,7 @@ const locationSchema = mongoose.Schema({
     tags: String,
     type: String,
     name: String,
+    placeId: String,
     gps: geoSchema
 });
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@google/maps": "^0.4.5",
+    "express": "^4.16.2",
     "mongoose": "^5.0.7"
   },
   "devDependencies": {},
