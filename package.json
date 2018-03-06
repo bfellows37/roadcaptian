@@ -6,7 +6,8 @@
   "dependencies": {
     "@google/maps": "^0.4.5",
     "express": "^4.16.2",
-    "mongoose": "^5.0.7"
+    "mongoose": "^5.0.7",
+    "node-fetch": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -2,10 +2,12 @@
 
 const router = require('express').Router();
 
-const getPoint = require('./src/api/getPoint');
+const getRoadTrip = require('./src/api/getRoadTrip');
 
-router.use('/asdf', async (req,res,next) => {
-    res.send(await getPoint([-110,41], 'w', [0,1000000]));
+router.post('/roadtrip', async (req, res) => {
+  const {direction, days, distancePerDay} = req.body;
+  const roadtrip = await getRoadTrip([-122.32, 47.83], direction, days, distancePerDay);
+  res.send(roadtrip);
 });
 
 module.exports = exports = router;
