@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+
+  api:
+    image: node:carbon
+    volumes:
+      - .:/roadcaptain
+    working_dir: /roadcaptain
+    command: "bash docker-run.sh"
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - RDCPT_DB=roadcaptain
+      #make damn sure the ports directive maps to this port
+      - LISTEN_PORT=3000
+      - MAPS_KEY
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"

@@ -68,36 +68,39 @@ const getPoint = (origin, direction = null, distanceRange = [0, 100000]) => {
       if (error) {
         reject(error);
       } else {
-        const params = results.reduce((pv, cv) => {
-          const acc = typeof pv === 'object' ? `${pv.gps.coordinates[1]},${pv.gps.coordinates[0]}` : pv;
-          return `${acc}|${cv.gps.coordinates[1]},${cv.gps.coordinates[0]}`;
-        });
-        const resultsWithPlaceIds = results.filter(place => place.placeId === false || place.placeId);
-        let isGoogleCalled = false;
-        if (resultsWithPlaceIds.length !== results.length) {
-          console.log('need to call google ' + `${resultsWithPlaceIds.length}/${results.length}`);
-          isGoogleCalled = true;
-          const googleUrl = `https://roads.googleapis.com/v1/nearestRoads?points=${params}&key=${process.env.mapsKey}`;
-          const nearestRoads = await fetch(googleUrl).then(res => res.json());
-          if (nearestRoads && nearestRoads.snappedPoints && nearestRoads.snappedPoints.length) {
-            nearestRoads.snappedPoints.forEach(value => {
-              results[value.originalIndex].placeId = value.placeId;
+        if (results.length) {
+          const params = results.reduce((pv, cv) => {
+            const acc = typeof pv === 'object' ? `${pv.gps.coordinates[1]},${pv.gps.coordinates[0]}` : pv;
+            return `${acc}|${cv.gps.coordinates[1]},${cv.gps.coordinates[0]}`;
+          });
+          const resultsWithPlaceIds = results.filter(place => place.placeId === false || place.placeId);
+          let isGoogleCalled = false;
+          if (resultsWithPlaceIds.length !== results.length) {
+            console.log('need to call google ' + `${resultsWithPlaceIds.length}/${results.length}`);
+            isGoogleCalled = true;
+            const googleUrl = `https://roads.googleapis.com/v1/nearestRoads?points=${params}&key=${process.env.MAPS_KEY}`;
+            const nearestRoads = await fetch(googleUrl).then(res => res.json());
+            if (nearestRoads && nearestRoads.snappedPoints && nearestRoads.snappedPoints.length) {
+              nearestRoads.snappedPoints.forEach(value => {
+                results[value.originalIndex].placeId = value.placeId;
+              });
+            }
+          } else {
+            console.log('no need to call google');
+          }
+          const filteredResults = results.filter(result => result.placeId && result.placeId !== 'false');
+          const pickOne = Math.floor(Math.random() * filteredResults.length);
+          resolve(filteredResults[pickOne]);
+          if (isGoogleCalled) {
+            results.forEach(result => {
+              if (!result.placeId) {
+                result.placeId = false;
+              }
+              result.save();
             });
           }
         } else {
-          console.log('no need to call google');
-        }
-        const filteredResults = results.filter(result => result.placeId);
-        const pickOne = Math.floor(Math.random() * filteredResults.length);
-        resolve(filteredResults[pickOne]);
-        if (isGoogleCalled){
-          results.forEach(result => {
-            console.log(`saving result id ${result._id}`);
-            if (!result.placeId) {
-              result.placeId = false;
-            }
-            result.save();
-          });
+          resolve([]);
         }
       }
     });
