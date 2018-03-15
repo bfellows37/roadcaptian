@@ -76,17 +76,17 @@ const getPoint = (origin, direction = null, distanceRange = [0, 100000]) => {
           const resultsWithPlaceIds = results.filter(place => place.placeId === false || place.placeId);
           let isGoogleCalled = false;
           if (resultsWithPlaceIds.length !== results.length) {
-            console.log('need to call google ' + `${resultsWithPlaceIds.length}/${results.length}`);
+            process.env.NODE_ENV !== 'production' && console.log('need to call google ' + `${resultsWithPlaceIds.length}/${results.length}`);
             isGoogleCalled = true;
             const googleUrl = `https://roads.googleapis.com/v1/nearestRoads?points=${params}&key=${process.env.MAPS_KEY}`;
-            const nearestRoads = await fetch(googleUrl).then(res => res.json());
-            if (nearestRoads && nearestRoads.snappedPoints && nearestRoads.snappedPoints.length) {
-              nearestRoads.snappedPoints.forEach(value => {
+            const { snappedPoints } = await fetch(googleUrl).then(res => res.json());
+            if (snappedPoints && snappedPoints.length) {
+              snappedPoints.forEach(value => {
                 results[value.originalIndex].placeId = value.placeId;
               });
             }
           } else {
-            console.log('no need to call google');
+            process.env.NODE_ENV !== 'production' && console.log('no need to call google');
           }
           const filteredResults = results.filter(result => result.placeId && result.placeId !== 'false');
           const pickOne = Math.floor(Math.random() * filteredResults.length);

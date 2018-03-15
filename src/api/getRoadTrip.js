@@ -12,6 +12,8 @@ const getPoint = require('./getPoint');
  * @returns {Promise<Array>}
  */
 const getRoadTrip = async (origin, direction, days, distancePerDay) => {
+  const start = Date.now();
+  process.env.NODE_ENV !== 'production' && console.log('start road trip');
   try {
     let lastEndingLocation = origin;
     let points = [];
@@ -22,13 +24,12 @@ const getRoadTrip = async (origin, direction, days, distancePerDay) => {
       points.push(point);
       lastEndingLocation = point.gps.coordinates;
       const turnAround = !didIturnAround && shouldITurnAround(days - 1, i + 1);
-      console.log('turnAround', turnAround);
-      console.log('direction', direction);
       if (turnAround) {
         direction = reverseDirection(direction);
         didIturnAround = true;
       }
     }
+    process.env.NODE_ENV !== 'production' && console.log(`end road trip ${Date.now() - start}ms`);
     return points;
   } catch (e) {
     console.log(e);
