@@ -1,6 +1,11 @@
 const express = require('express');
-const routes = require('./routes');
 const bodyParser = require('body-parser');
+
+const validateEnvVars = require('./src/validateEnvVars');
+validateEnvVars();
+
+const routes = require('./routes');
+const defaultErrorHandler = require('./src/defaultErrorHandler');
 
 const mongoose = require('mongoose');
 mongoose.Promise = Promise;
@@ -10,7 +15,10 @@ const app = express();
 
 app.use(bodyParser());
 
+
 app.use(routes);
+
+app.use(defaultErrorHandler);
 
 app.listen(process.env.LISTEN_PORT || '3000', () => {
    console.log(`ROAD CAPTAIN SERVER: LISTENING ON PORT ${process.env.LISTEN_PORT || '3000'}`);
