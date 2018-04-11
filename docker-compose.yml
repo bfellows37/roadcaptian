@@ -9,9 +9,6 @@ services:
       - .:/roadcaptain
     working_dir: /roadcaptain
     command: "bash docker-run.sh"
-    ports:
-      - "3000:3000"
-      - "9229:9229"
     environment:
       - MONGO_HOST=mongo
       - MONGO_PORT=27017
@@ -19,7 +16,21 @@ services:
       - LISTEN_PORT=3000
       #secret envvars
       - MAPS_KEY
-
+  app:
+    build:
+      context: ./src/client
+    volumes:
+      - .:/roadcaptain
+    working_dir: /roadcaptain/src/client
+    command: "bash docker-run.sh"
+  proxy:
+    image: node:carbon
+    volumes:
+      - .:/roadcaptain
+    working_dir: /roadcaptain/src/proxy
+    command: "bash docker-proxy.sh"
+    ports:
+      - "80:80"
   mongo:
     image: mongo:latest
     ports:

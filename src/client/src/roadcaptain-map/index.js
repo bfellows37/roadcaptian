@@ -1,20 +1,15 @@
 import React from 'react';
-import { GoogleMap, Marker } from 'react-google-maps'
-//
-// const roadCaptainMapComponent = (props) =>
-//   <GoogleMap
-//     defaultZoom={8}
-//     defaultCenter={{lat: -42,lon: 122}}
-//   >
-//     <Marker position={{ lat: -42, lon: 122 }} />
-//   </GoogleMap>
+import {withGoogleMap, withScriptjs, GoogleMap, Marker, Polyline} from 'react-google-maps';
 
-class RoadCaptainMapComponent extends React.Component {
-  render() {
-    return (
-      <span>werd</span>
-    )
-  }
-}
+const RoadCaptainMap = withScriptjs(withGoogleMap(props => (
+  <GoogleMap
+    defaultZoom={8}
+    defaultCenter={{lat: 42, lng: -122}}
+  >
+    <Marker
+      position={{lat: 42, lng: -122}}
+    />
+  </GoogleMap>
+)));
 
-export default RoadCaptainMapComponent;
+export { RoadCaptainMap };
