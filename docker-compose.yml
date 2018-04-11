@@ -16,6 +16,8 @@ services:
       - LISTEN_PORT=3000
       #secret envvars
       - MAPS_KEY
+    ports:
+      - "9229:9229"
   app:
     build:
       context: ./src/client
