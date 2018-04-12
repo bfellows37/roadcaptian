@@ -15,7 +15,7 @@ const getTrip = async (opts) => {
 };
 
 const main = async () => {
-  try{
+  try {
     const trip = await getTrip({
       direction: 's',
       days: '5',
